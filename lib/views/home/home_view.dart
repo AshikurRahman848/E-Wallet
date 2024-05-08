@@ -43,6 +43,7 @@ class _HomeViewState extends State<HomeView> {
                           color: Colors.white.withOpacity(.1),
                           width: 4,
                         )
+                        
                       ),
                     )
                   ],
