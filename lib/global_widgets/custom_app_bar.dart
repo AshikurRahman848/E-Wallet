@@ -9,6 +9,7 @@ PreferredSizeWidget customAppBar({
 }) {
   return AppBar(
     backgroundColor: Colors.transparent,
+    surfaceTintColor: Colors.transparent,
     elevation: 0,
 
     leading: hideLeading == true ? null :IconButton(
