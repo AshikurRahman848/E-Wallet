@@ -1,7 +1,7 @@
 
 import 'package:e_wallet/global_widgets/custom_button.dart';
 import 'package:e_wallet/global_widgets/custom_field.dart';
-import 'package:e_wallet/views/home/home_view.dart';
+//import 'package:e_wallet/views/home/home_view.dart';
 import 'package:e_wallet/views/nav_view/nav_view.dart';
 import 'package:flutter/material.dart';
 import 'package:e_wallet/views/auth/signup.dart';
