@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "195534635276",
+    "project_id": "btb-4a4dc",
+    "storage_bucket": "btb-4a4dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195534635276:android:dc97da9c756845063d8929",
+        "android_client_info": {
+          "package_name": "com.example.e_wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX1T1WT6e5XoCVEyespwIy5WJzFX-F5l8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

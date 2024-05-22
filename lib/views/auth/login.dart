@@ -3,6 +3,7 @@ import 'package:e_wallet/global_widgets/custom_button.dart';
 import 'package:e_wallet/global_widgets/custom_field.dart';
 //import 'package:e_wallet/views/home/home_view.dart';
 import 'package:e_wallet/views/nav_view/nav_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_wallet/views/auth/signup.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -30,21 +33,35 @@ class _LoginViewState extends State<LoginView> {
               ),
                Column(
                 children: [
-                  const CustomField(
+                   CustomField(
                     title: 'Enter your Email',
+                    controller: emailController,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  const CustomField(
+                   CustomField(
                     title: 'Enter Password',secured: true,
+                    controller: passwordController,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
                   CustomButton(
                     title: 'Log In',
-                    onTap: () => Get.to(() => const NavBarView()),
+                    onTap: () async{
+                       try {
+                         await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: emailController.text, 
+                        password: passwordController.text
+                        );
+                        Get.offAll(()=> const NavBarView());
+                       }on FirebaseAuthException catch(error){
+                        print (error);
+                        Get.snackbar('Error', error.message!);
+                       }
+                      },
+                   // onTap: () => Get.to(() => const NavBarView()),
                   ),
                 ],
               ),

@@ -91,12 +91,12 @@ class _HomeViewState extends State<HomeView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Row(
+                      Row(
                         children: [
                           CustomHomeItem(
                             title: 'Send\nMoney',
                             icon: Icons.send,
-                            onTap: () => Get.to(()=> const ReciverView()),
+                            onTap: () => Get.to(() => const ReciverView()),
                           ),
                           const SizedBox(
                             width: 20,
@@ -112,12 +112,13 @@ class _HomeViewState extends State<HomeView> {
                       const SizedBox(
                         height: 25,
                       ),
-                       Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Activity'),
-                          InkWell(onTap: () => Get.to(()=>const ActivityView()),
-                          child: const Text('See All'),
+                          InkWell(
+                            onTap: () => Get.to(() => const ActivityView()),
+                            child: const Text('See All'),
                           ),
                         ],
                       ),

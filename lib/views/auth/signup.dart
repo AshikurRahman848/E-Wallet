@@ -1,7 +1,10 @@
 import 'package:e_wallet/global_widgets/custom_app_bar.dart';
 import 'package:e_wallet/global_widgets/custom_button.dart';
 import 'package:e_wallet/global_widgets/custom_field.dart';
-import 'package:e_wallet/views/auth/setup_view.dart';
+//import 'package:e_wallet/views/home/home_view.dart';
+import 'package:e_wallet/views/nav_view/nav_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:e_wallet/views/auth/setup_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,10 +18,10 @@ class SingupView extends StatefulWidget {
 class _SingupView extends State<SingupView> {
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     return Scaffold(
-      appBar: customAppBar(
-    
-      ),
+      appBar: customAppBar(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -29,24 +32,38 @@ class _SingupView extends State<SingupView> {
                 'assets/images/PayPal.png',
                 width: 200,
               ),
-               Column(
+              Column(
                 children: [
-                  const CustomField(
+                  CustomField(
                     title: 'Enter your Email',
+                    controller: emailController,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  const CustomField(
-                    title: 'Enter Password',secured: true,
+                  CustomField(
+                    title: 'Enter Password',
+                    secured: true,
+                    controller: passwordController,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
                   CustomButton(
-                    title: 'Sign Up',
-                    onTap: ()=> Get.to(()=>  ProfileSetupView()),
-                    ) ,
+                      title: 'Sign Up',
+                      onTap: () async{
+                       try {
+                         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: emailController.text, 
+                        password: passwordController.text
+                        );
+                        Get.offAll(()=> const NavBarView());
+                       }on FirebaseAuthException catch(error){
+                        print (error);
+                       }
+                      },
+                      //onTap: ()=> Get.to(()=>  ProfileSetupView()),
+                      ),
                 ],
               ),
               Column(
@@ -55,7 +72,8 @@ class _SingupView extends State<SingupView> {
                     'Already have an account?',
                     style: TextStyle(color: Colors.black.withOpacity(.5)),
                   ),
-                  TextButton(onPressed: () => Get.back(), child: const Text('Log In'))
+                  TextButton(
+                      onPressed: () => Get.back(), child: const Text('Log In'))
                 ],
               )
             ],

@@ -5,13 +5,15 @@ class CustomField extends StatefulWidget {
   final bool? secured;
   final IconData? prefixIcon;
   final TextInputType? keyboardType;
+  final TextEditingController? controller;
 
   const CustomField({
     super.key,
     required this.title,
     this.secured,
     this.prefixIcon,
-    this.keyboardType,
+    this.keyboardType, 
+    this.controller,
   });
 
   @override
@@ -22,6 +24,7 @@ class _CustomFieldState extends State<CustomField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       keyboardType:
           widget.keyboardType, // Correctly reference widget.keyboardType
       obscureText: widget.secured ?? false,
