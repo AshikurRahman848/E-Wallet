@@ -9,7 +9,7 @@ class CustomListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    this.trailing,
+    this.trailing, required TextStyle trailingTextStyle,
   });
 
   @override

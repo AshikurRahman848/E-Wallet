@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -43,14 +44,16 @@ class _HomeViewState extends State<HomeView> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                         if (snapshot.hasError) {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         }
                         if (!snapshot.hasData || !snapshot.data!.exists) {
-                          return const Center(child: Text('User data not found'));
+                          return const Center(
+                              child: Text('User data not found'));
                         }
                         final userData =
                             snapshot.data!.data() as Map<String, dynamic>;
@@ -116,27 +119,30 @@ class _HomeViewState extends State<HomeView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          CustomHomeItem(
-                            title: 'Send\nMoney',
-                            icon: Icons.send,
-                            onTap: () => Get.to(() => const ReciverView()),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          CustomHomeItem(
-                            icon: Icons.monetization_on,
-                            title: 'Add\nMoney',
-                            backgroundColor: Colors.white,
-                            itemColor: Colors.black,
-                            onTap: () async {
-                              print(
-                                  await FirebaseMessaging.instance.getToken());
-                            },
-                          ),
-                        ],
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: [
+                            CustomHomeItem(
+                              title: 'Send\nMoney',
+                              icon: Icons.send,
+                              onTap: () => Get.to(() => const ReciverView()),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            CustomHomeItem(
+                              icon: Icons.monetization_on,
+                              title: 'Add\nMoney',
+                              backgroundColor: Colors.white,
+                              itemColor: Colors.black,
+                              onTap: () async {
+                                print(await FirebaseMessaging.instance
+                                    .getToken());
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 25,
@@ -151,16 +157,59 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ],
                       ),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: 10,
-                          itemBuilder: (context, index) {
-                            return const CustomListTile(
-                              title: 'Md.Ashikur Rahman',
-                              subtitle: '4 Days ago',
-                              trailing: '-600',
-                            );
+                      StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('history')
+                              .orderBy('time',
+                                  descending:
+                                      true) // Order by the 'time' field in descending order
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              ); // Center
+                            } else {
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                primary: false,
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  final data = snapshot.data!.docs[index];
+                                  bool isMe =
+                                      data['sender_email'] == user.email;
+                                  bool ifIAmReceiver =
+                                      data['receiver_email'] == user.email;
+                                  DateTime trxTime =
+                                      (data['time'] as Timestamp).toDate();
+
+                                  final formateddate =
+                                      DateFormat.yMMMd().format(trxTime);
+                                  final formatedTime =
+                                      DateFormat.jm().format(trxTime);
+
+                                  String amountString =
+                                      '${data['amount']}'; // Convert amount to string
+
+                                  return isMe || ifIAmReceiver
+                                      ? CustomListTile(
+                                          title: isMe
+                                              ? data['receiver']
+                                              : data['sender'],
+                                          subtitle:
+                                              '$formateddate - $formatedTime',
+                                          trailing: isMe
+                                              ? '-\$$amountString'
+                                              : '+\$$amountString', // Add $ before and after the amount
+                                          trailingTextStyle: const TextStyle(
+                                              color: Colors.black),
+                                        )
+                                      : const SizedBox();
+                                },
+                              ); // ListView.builder
+                            }
                           })
                     ],
                   ),
